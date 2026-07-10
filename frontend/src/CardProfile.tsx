@@ -23,6 +23,14 @@ export default function CardProfile() {
     fetchEmployee();
   }, [slug]);
 
+  const fullName = employee ? `${employee.first_name} ${employee.last_name}` : '';
+  const nameSizeClass =
+    fullName.length > 28
+      ? 'text-xs sm:text-lg md:text-2xl'
+      : fullName.length > 18
+      ? 'text-sm sm:text-xl md:text-3xl'
+      : 'text-base sm:text-2xl md:text-3xl';
+
   const handleDownloadVCard = () => {
     if (!employee) return;
 
@@ -107,11 +115,11 @@ export default function CardProfile() {
             {/* RIGHT: Contact Info */}
             <div className="flex-1 min-w-0 p-4 sm:p-8 md:p-10">
               {/* Name */}
-              <h1 className="text-white text-base sm:text-2xl md:text-3xl font-semibold tracking-wide mb-1 sm:mb-2 truncate">
+              <h1 className={`text-white font-semibold tracking-wide mb-1 sm:mb-2 leading-tight break-words line-clamp-2 ${nameSizeClass}`}>
                 {employee.first_name} {employee.last_name.toUpperCase()}
               </h1>
               {/* Role */}
-              <p className="text-white/60 text-[11px] sm:text-sm leading-relaxed mb-3 sm:mb-6 md:mb-8 truncate">
+              <p className="text-white/60 text-[11px] sm:text-sm leading-relaxed mb-3 sm:mb-6 md:mb-8 line-clamp-2 break-words">
                 {employee.role}
               </p>
 
