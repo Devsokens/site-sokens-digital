@@ -32,29 +32,8 @@ export default function CardProfile() {
       : 'text-base sm:text-2xl md:text-3xl';
 
   const handleDownloadVCard = () => {
-    if (!employee) return;
-
-    const lines = [
-      'BEGIN:VCARD',
-      'VERSION:3.0',
-      `N:${employee.last_name};${employee.first_name};;;`,
-      `FN:${employee.first_name} ${employee.last_name}`,
-      'ORG:Sokens Digital',
-      `TITLE:${employee.role || ''}`,
-    ];
-    if (employee.email) lines.push(`EMAIL:${employee.email}`);
-    if (employee.phone) lines.push(`TEL;TYPE=WORK,VOICE:${employee.phone}`);
-    if (employee.address) lines.push(`ADR;TYPE=WORK:;;${employee.address};;;;`);
-    if (employee.linkedin_url) lines.push(`URL;TYPE=LinkedIn:${employee.linkedin_url}`);
-    lines.push('URL:https://sokens.digital', 'END:VCARD');
-
-    const blob = new Blob([lines.join('\r\n')], { type: 'text/vcard;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${employee.first_name}-${employee.last_name}.vcf`.toLowerCase();
-    link.click();
-    URL.revokeObjectURL(url);
+    if (!slug) return;
+    window.location.href = `/api/vcard/${slug}`;
   };
 
   if (loading) {
