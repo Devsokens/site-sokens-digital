@@ -5,23 +5,23 @@ import { Phone, MapPin, Mail, Download } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function CardProfile() {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const [employee, setEmployee] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchEmployee() {
-      if (!id) return;
+      if (!slug) return;
       const { data } = await supabase
         .from('employees')
         .select('*')
-        .eq('id', id)
+        .eq('slug', slug)
         .single();
       if (data) setEmployee(data);
       setLoading(false);
     }
     fetchEmployee();
-  }, [id]);
+  }, [slug]);
 
   const handleDownloadVCard = () => {
     if (!employee) return;

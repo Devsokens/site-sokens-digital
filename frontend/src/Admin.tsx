@@ -21,6 +21,27 @@ export default function Admin() {
   // Base URL for the frontend application (where the QR points)
   const baseUrl = window.location.origin;
 
+  function slugify(text: string) {
+    return text
+      .normalize('NFD')
+      .replace(new RegExp('[̀-ͯ]', 'g'), '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  function generateUniqueSlug(first: string, last: string) {
+    const base = slugify(`${first}-${last}`);
+    let slug = base;
+    let counter = 2;
+    while (employees.some(emp => emp.slug === slug)) {
+      slug = `${base}-${counter}`;
+      counter++;
+    }
+    return slug;
+  }
+
   async function fetchEmployees() {
     setLoading(true);
     const { data, error } = await supabase
@@ -45,14 +66,15 @@ export default function Admin() {
     const { error } = await supabase
       .from('employees')
       .insert([
-        { 
-          first_name: firstName, 
-          last_name: lastName, 
-          role, 
-          email, 
-          phone, 
+        {
+          first_name: firstName,
+          last_name: lastName,
+          role,
+          email,
+          phone,
           linkedin_url: linkedin,
-          address
+          address,
+          slug: generateUniqueSlug(firstName, lastName)
         }
       ]);
 
@@ -174,7 +196,7 @@ export default function Admin() {
               
               <div id={`qr-${emp.id}`} className="bg-white p-4 rounded-xl mb-4">
                 <QRCodeSVG
-                  value={`${baseUrl}/card/${emp.id}`}
+                  value={`${baseUrl}/card/${emp.slug}`}
                   size={150}
                   bgColor={"#ffffff"}
                   fgColor={"#000000"}
@@ -184,7 +206,7 @@ export default function Admin() {
 
               <div className="flex flex-col gap-2 w-full mt-2">
                 <a
-                  href={`${baseUrl}/card/${emp.id}`}
+                  href={`${baseUrl}/card/${emp.slug}`}
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2.5 px-4 rounded-lg transition-colors"
