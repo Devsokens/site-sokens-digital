@@ -201,6 +201,7 @@ export default function Admin() {
                   bgColor={"#ffffff"}
                   fgColor={"#000000"}
                   level={"Q"}
+                  marginSize={4}
                 />
               </div>
 
