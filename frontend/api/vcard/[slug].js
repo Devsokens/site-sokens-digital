@@ -1,6 +1,6 @@
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   const { slug } = req.query;
   if (!slug || typeof slug !== 'string') {
     res.status(400).send('Missing slug');
@@ -42,4 +42,4 @@ module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'text/vcard; charset=utf-8');
   res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
   res.status(200).send(vcard);
-};
+}
